@@ -1,19 +1,25 @@
+/**
+ * 站点配置类型定义
+ */
 export interface SiteConfig {
-  name: string;
-  description: string;
-  url: string;
-  ogImage: string;
+  name: string;             // 站点名称
+  description: string;      // 站点描述
+  url: string;              // 站点URL
+  ogImage: string;          // 社交媒体预览图片
   links: {
-    github?: string;
-    twitter?: string;
-    linkedin?: string;
+    github?: string;        // GitHub链接（可选）
+    twitter?: string;       // Twitter链接（可选）
+    linkedin?: string;      // LinkedIn链接（可选）
   };
   author: {
-    name: string;
-    email: string;
+    name: string;           // 作者名称
+    email: string;          // 作者邮箱
   };
 }
 
+/**
+ * 站点配置实例
+ */
 export const siteConfig: SiteConfig = {
   name: 'My Blog',
   description: 'A personal blog built with Next.js',

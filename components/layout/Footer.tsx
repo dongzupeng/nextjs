@@ -1,13 +1,22 @@
+/**
+ * 页面底部组件
+ */
 import { siteConfig } from '@/lib/config';
 
+/**
+ * 底部组件，包含版权信息和社交媒体链接
+ */
 export default function Footer() {
   return (
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          {/* 版权信息 */}
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
+          
+          {/* 社交媒体链接 */}
           <div className="flex gap-4">
             {siteConfig.links.github && (
               <a

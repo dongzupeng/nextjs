@@ -1,5 +1,11 @@
+/**
+ * 博客系统模拟数据
+ */
 import { Post, Category, Tag } from '@/types/blog';
 
+/**
+ * 分类列表
+ */
 export const categories: Category[] = [
   {
     id: '1',
@@ -21,6 +27,9 @@ export const categories: Category[] = [
   },
 ];
 
+/**
+ * 标签列表
+ */
 export const tags: Tag[] = [
   { id: '1', slug: 'typescript', name: 'TypeScript' },
   { id: '2', slug: 'tailwind', name: 'Tailwind CSS' },
@@ -29,6 +38,9 @@ export const tags: Tag[] = [
   { id: '5', slug: 'tutorial', name: '教程' },
 ];
 
+/**
+ * 文章列表
+ */
 export const posts: Post[] = [
   {
     id: '1',
@@ -80,22 +92,47 @@ export const posts: Post[] = [
   },
 ];
 
+/**
+ * 根据 slug 获取文章
+ * @param slug 文章别名
+ * @returns 文章对象或 undefined
+ */
 export function getPostBySlug(slug: string): Post | undefined {
   return posts.find((post) => post.slug === slug);
 }
 
+/**
+ * 根据分类 slug 获取文章列表
+ * @param categorySlug 分类别名
+ * @returns 文章列表
+ */
 export function getPostsByCategory(categorySlug: string): Post[] {
   return posts.filter((post) => post.category.slug === categorySlug);
 }
 
+/**
+ * 根据标签 slug 获取文章列表
+ * @param tagSlug 标签别名
+ * @returns 文章列表
+ */
 export function getPostsByTag(tagSlug: string): Post[] {
   return posts.filter((post) => post.tags.some((tag) => tag.slug === tagSlug));
 }
 
+/**
+ * 根据 slug 获取分类
+ * @param slug 分类别名
+ * @returns 分类对象或 undefined
+ */
 export function getCategoryBySlug(slug: string): Category | undefined {
   return categories.find((cat) => cat.slug === slug);
 }
 
+/**
+ * 根据 slug 获取标签
+ * @param slug 标签别名
+ * @returns 标签对象或 undefined
+ */
 export function getTagBySlug(slug: string): Tag | undefined {
   return tags.find((tag) => tag.slug === slug);
 }
