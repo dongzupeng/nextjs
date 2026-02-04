@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
+/* 浅色主题变量 */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+/* 深色主题变量 */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+/* 系统主题变量 - 当用户选择系统主题时使用 */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not(.dark) {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 @theme inline {
@@ -12,15 +27,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
