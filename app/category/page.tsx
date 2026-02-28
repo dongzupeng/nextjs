@@ -1,10 +1,38 @@
-import { categories } from '@/data/posts';
+/**
+ * 分类列表页面
+ * 使用 API 获取数据
+ */
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Category } from '@/types/blog';
 
 export default function CategoryPage() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // 加载分类列表
+    fetch('/api/categories')
+      .then(res => res.json())
+      .then(data => {
+        setCategories(data.categories || []);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error('加载分类失败:', err);
+        setIsLoading(false);
+      });
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="mb-8 text-4xl font-bold">分类</h1>
-      {categories.length === 0 ? (
+      {isLoading ? (
+        <div className="text-center">
+          <p className="text-muted-foreground">加载中...</p>
+        </div>
+      ) : categories.length === 0 ? (
         <div className="text-center text-muted-foreground">
           <p>暂无分类</p>
         </div>

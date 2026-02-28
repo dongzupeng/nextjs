@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(50)
+  email     String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // 关联
+  posts Post[]
+
+  @@map("users")
+}
+
+// 分类模型
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(50)
+  slug        String  @unique @db.VarChar(50)
+  description String? @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // 关联
+  posts Post[]
+
+  @@map("categories")
+}
+
+// 标签模型
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(50)
+  slug      String   @unique @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // 关联
+  posts PostTag[]
+
+  @@map("tags")
+}
+
+// 文章模型
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  excerpt     String?  @db.Text
+  content     String   @db.LongText
+  coverImage  String?  @map("cover_image") @db.VarChar(255)
+  readingTime Int      @default(0) @map("reading_time")
+  views       Int      @default(0)
+  publishedAt DateTime @default(now()) @map("published_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // 外键
+  authorId   Int @map("author_id")
+  categoryId Int @map("category_id")
+
+  // 关联
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  tags     PostTag[]
+
+  @@index([slug])
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@map("posts")
+}
+
+// 文章标签关联模型
+model PostTag {
+  postId Int @map("post_id")
+  tagId  Int @map("tag_id")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
