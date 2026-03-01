@@ -18,6 +18,7 @@ export default function Header() {
   const [theme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // 客户端初始化
   useEffect(() => {
@@ -54,8 +55,15 @@ export default function Header() {
     setCurrentTheme(nextTheme);
   };
 
+  // 处理登出确认
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
   // 处理登出
   const handleLogout = async () => {
+    setShowLogoutConfirm(false);
+    
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
       setIsLoggedIn(false);
@@ -65,6 +73,11 @@ export default function Header() {
     } catch (error) {
       console.error('登出失败:', error);
     }
+  };
+
+  // 取消登出
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   // 获取主题图标
@@ -82,36 +95,36 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* 站点标题 */}
-          <Link href="/" className="text-2xl font-bold">
+          <Link href="/" className="text-2xl font-bold transition-colors hover:text-primary">
             {siteConfig.name}
           </Link>
           
           <div className="flex items-center gap-6">
             {/* 导航菜单 */}
-            <nav className="flex items-center gap-6">
-              <Link href="/" className="text-sm font-medium hover:text-primary">
+            <nav className="hidden md:flex items-center gap-6">
+              <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
                 首页
               </Link>
-              <Link href="/blog" className="text-sm font-medium hover:text-primary">
+              <Link href="/blog" className="text-sm font-medium transition-colors hover:text-primary">
                 博客
               </Link>
-              <Link href="/category" className="text-sm font-medium hover:text-primary">
+              <Link href="/category" className="text-sm font-medium transition-colors hover:text-primary">
                 分类
               </Link>
-              <Link href="/tag" className="text-sm font-medium hover:text-primary">
+              <Link href="/tag" className="text-sm font-medium transition-colors hover:text-primary">
                 标签
               </Link>
-              <Link href="/about" className="text-sm font-medium hover:text-primary">
+              <Link href="/about" className="text-sm font-medium transition-colors hover:text-primary">
                 关于
               </Link>
               {isLoggedIn && (
                 <Link 
                   href="/admin" 
-                  className="rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary hover:bg-primary/20"
+                  className="rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                 >
                   后台
                 </Link>
@@ -126,8 +139,9 @@ export default function Header() {
                     {username}
                   </span>
                   <button
-                    onClick={handleLogout}
+                    onClick={handleLogoutClick}
                     className="rounded-lg border px-3 py-1 text-sm font-medium transition-colors hover:bg-accent"
+                    aria-label="登出"
                   >
                     登出
                   </button>
@@ -153,6 +167,35 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {/* 登出确认对话框 */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/50 backdrop-blur-sm transition-opacity">
+          <div className="bg-background rounded-lg p-6 w-full max-w-md shadow-2xl border animate-in fade-in zoom-in-95 duration-200">
+            <div className="text-center mb-6">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">确认登出</h3>
+              <p className="mt-2 text-sm text-muted-foreground">确定要登出您的账户吗？</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleCancelLogout}
+                className="flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex-1 rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2"
+              >
+                确认登出
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
