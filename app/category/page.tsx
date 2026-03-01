@@ -42,7 +42,7 @@ export default function CategoryPage() {
             <a
               key={category.id}
               href={`/category/${category.slug}`}
-              className="rounded-lg border bg-card p-6 transition-colors hover:bg-accent"
+              className="rounded-lg bg-card p-6 shadow-md transition-all hover:bg-accent hover:shadow-lg"
             >
               <h2 className="text-xl font-semibold">{category.name}</h2>
               <p className="mt-2 text-muted-foreground">

@@ -8,8 +8,8 @@ import { siteConfig } from '@/lib/config';
  */
 export default function Footer() {
   return (
-    <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <footer className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           {/* 版权信息 */}
           <p className="text-sm text-muted-foreground">

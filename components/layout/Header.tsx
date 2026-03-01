@@ -95,7 +95,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur shadow-md supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* 站点标题 */}
@@ -140,7 +140,7 @@ export default function Header() {
                   </span>
                   <button
                     onClick={handleLogoutClick}
-                    className="rounded-lg border px-3 py-1 text-sm font-medium transition-colors hover:bg-accent"
+                    className="rounded-lg bg-card px-3 py-1 text-sm font-medium shadow-sm transition-all duration-200 hover:bg-accent hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     aria-label="登出"
                   >
                     登出
@@ -149,7 +149,7 @@ export default function Header() {
               ) : (
                 <Link
                   href="/login"
-                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all duration-200 hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   登录
                 </Link>
@@ -158,7 +158,7 @@ export default function Header() {
               {/* 主题切换按钮 */}
               <button
                 onClick={handleThemeToggle}
-                className="flex items-center justify-center rounded-full p-2 transition-colors hover:bg-accent"
+                className="flex items-center justify-center rounded-full p-2 transition-all duration-200 hover:bg-accent hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 aria-label="切换主题"
               >
                 <span className="text-xl">{getThemeIcon()}</span>
@@ -170,25 +170,25 @@ export default function Header() {
 
       {/* 登出确认对话框 */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/50 backdrop-blur-sm transition-opacity">
-          <div className="bg-background rounded-lg p-6 w-full max-w-md shadow-2xl border animate-in fade-in zoom-in-95 duration-200">
-            <div className="text-center mb-6">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-                <span className="text-2xl">⚠️</span>
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/60 backdrop-blur-md transition-opacity duration-300">
+          <div className="bg-background rounded-2xl p-8 w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+            <div className="text-center mb-8">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-destructive/20 to-destructive/10 shadow-lg backdrop-blur-sm">
+                <span className="text-3xl filter drop-shadow-md">⚠️</span>
               </div>
-              <h3 className="mt-4 text-lg font-semibold">确认登出</h3>
-              <p className="mt-2 text-sm text-muted-foreground">确定要登出您的账户吗？</p>
+              <h3 className="mt-6 text-xl font-bold">确认登出</h3>
+              <p className="mt-3 text-sm text-muted-foreground">确定要登出您的账户吗？</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <button
                 onClick={handleCancelLogout}
-                className="flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                className="flex-1 rounded-xl px-6 py-3 text-sm font-medium transition-all duration-200 hover:bg-accent hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               >
                 取消
               </button>
               <button
                 onClick={handleLogout}
-                className="flex-1 rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2"
+                className="flex-1 rounded-xl bg-gradient-to-r from-destructive to-destructive/90 px-6 py-3 text-sm font-medium text-destructive-foreground transition-all duration-200 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2"
               >
                 确认登出
               </button>

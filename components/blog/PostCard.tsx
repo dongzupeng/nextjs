@@ -8,7 +8,7 @@ interface PostCardProps {
 
 export default function PostCard({ post }: PostCardProps) {
   return (
-    <article className="group rounded-lg border bg-card p-6 transition-shadow hover:shadow-lg">
+    <article className="group rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-[1.02]">
       <Link href={`/blog/${post.slug}`}>
         <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
           <span>{post.category.name}</span>
@@ -27,7 +27,7 @@ export default function PostCard({ post }: PostCardProps) {
           {post.tags.map((tag) => (
             <span
               key={tag.id}
-              className="rounded-full bg-secondary px-3 py-1 text-xs text-secondary-foreground"
+              className="rounded-full bg-secondary px-3 py-1 text-xs text-secondary-foreground shadow-sm"
             >
               {tag.name}
             </span>

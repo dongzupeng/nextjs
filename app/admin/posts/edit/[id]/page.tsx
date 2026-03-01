@@ -143,14 +143,14 @@ export default function EditPostPage() {
         <h1 className="text-3xl font-bold">编辑文章</h1>
         <Link
           href="/admin/posts"
-          className="rounded-lg border px-4 py-2 transition-colors hover:bg-accent"
+          className="rounded-lg bg-card px-4 py-2 shadow-sm transition-all hover:bg-accent hover:shadow-md"
         >
           返回列表
         </Link>
       </div>
 
       {error && (
-        <div className="mb-4 rounded-lg bg-destructive/10 p-4 text-destructive">
+        <div className="mb-4 rounded-lg bg-destructive/10 p-4 text-destructive shadow-md">
           {error}
         </div>
       )}
@@ -165,7 +165,7 @@ export default function EditPostPage() {
             type="text"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full rounded-lg border bg-background px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg bg-background px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow hover:shadow-md"
             placeholder="请输入文章标题"
             required
           />
@@ -177,7 +177,7 @@ export default function EditPostPage() {
           <textarea
             value={formData.excerpt}
             onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-            className="w-full rounded-lg border bg-background px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg bg-background px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow hover:shadow-md"
             rows={3}
             placeholder="请输入文章摘要（可选，不填写将自动提取正文前200字）"
           />
@@ -191,7 +191,7 @@ export default function EditPostPage() {
           <select
             value={formData.categoryId}
             onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-            className="w-full rounded-lg border bg-background px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg bg-background px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow hover:shadow-md"
             required
           >
             <option value="">请选择分类</option>
@@ -210,10 +210,10 @@ export default function EditPostPage() {
             {tags.map((tag) => (
               <label
                 key={tag.id}
-                className={`cursor-pointer rounded-full px-3 py-1 text-sm transition-colors ${
+                className={`cursor-pointer rounded-full px-3 py-1 text-sm transition-all shadow-sm ${
                   formData.selectedTags.includes(tag.id)
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:shadow-md'
                 }`}
               >
                 <input
@@ -237,7 +237,7 @@ export default function EditPostPage() {
           <textarea
             value={formData.content}
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-            className="w-full rounded-lg border bg-background px-4 py-2 font-mono focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg bg-background px-4 py-2 font-mono shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow hover:shadow-md"
             rows={20}
             placeholder="请输入文章内容，支持 Markdown 格式"
             required
@@ -246,7 +246,7 @@ export default function EditPostPage() {
 
         {/* 预览 */}
         {formData.content && (
-          <div className="rounded-lg border bg-card p-4">
+          <div className="rounded-lg bg-card p-4 shadow-md">
             <h3 className="mb-2 text-sm font-medium text-muted-foreground">预览</h3>
             <div className="prose prose-sm max-w-none">
               <pre className="whitespace-pre-wrap text-sm">{formData.content.slice(0, 500)}...</pre>
@@ -259,13 +259,13 @@ export default function EditPostPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-lg bg-primary px-6 py-2 text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+            className="rounded-lg bg-primary px-6 py-2 text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md disabled:opacity-50"
           >
             {isSubmitting ? '保存中...' : '保存修改'}
           </button>
           <Link
             href="/admin/posts"
-            className="rounded-lg border px-6 py-2 transition-colors hover:bg-accent"
+            className="rounded-lg bg-card px-6 py-2 shadow-sm transition-all hover:bg-accent hover:shadow-md"
           >
             取消
           </Link>

@@ -48,7 +48,7 @@ export default function RootLayout({
           {/* 头部组件 */}
           <Header />
           {/* 主内容区域 */}
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-20">{children}</main>
           {/* 底部组件 */}
           <Footer />
         </div>

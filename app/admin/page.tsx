@@ -12,7 +12,7 @@ export default function AdminPage() {
         {/* 文章管理卡片 */}
         <Link 
           href="/admin/posts"
-          className="rounded-lg border bg-card p-6 transition-shadow hover:shadow-lg"
+          className="rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-105"
         >
           <h2 className="mb-2 text-xl font-semibold">文章管理</h2>
           <p className="text-muted-foreground">
@@ -21,7 +21,7 @@ export default function AdminPage() {
         </Link>
         
         {/* 分类管理卡片 */}
-        <div className="rounded-lg border bg-card p-6">
+        <div className="rounded-lg bg-card p-6 shadow-md">
           <h2 className="mb-2 text-xl font-semibold">分类管理</h2>
           <p className="text-muted-foreground">
             管理文章分类（开发中）
@@ -29,7 +29,7 @@ export default function AdminPage() {
         </div>
         
         {/* 标签管理卡片 */}
-        <div className="rounded-lg border bg-card p-6">
+        <div className="rounded-lg bg-card p-6 shadow-md">
           <h2 className="mb-2 text-xl font-semibold">标签管理</h2>
           <p className="text-muted-foreground">
             管理文章标签（开发中）

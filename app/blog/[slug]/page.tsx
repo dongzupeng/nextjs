@@ -87,7 +87,7 @@ export default function BlogPostPage() {
         <div className="mb-8 flex flex-wrap items-center gap-4">
           <Link
             href={`/category/${post.category.slug}`}
-            className="rounded-full bg-secondary px-3 py-1 text-sm text-secondary-foreground hover:bg-secondary/80"
+            className="rounded-full bg-secondary px-3 py-1 text-sm text-secondary-foreground shadow-sm transition-all hover:bg-secondary/80 hover:shadow-md"
           >
             {post.category.name}
           </Link>
@@ -95,7 +95,7 @@ export default function BlogPostPage() {
             <Link
               key={tag.id}
               href={`/tag/${tag.slug}`}
-              className="rounded-full border px-3 py-1 text-sm hover:bg-accent"
+              className="rounded-full bg-card px-3 py-1 text-sm shadow-sm transition-all hover:bg-accent hover:shadow-md"
             >
               {tag.name}
             </Link>
@@ -104,7 +104,7 @@ export default function BlogPostPage() {
 
         {/* 文章摘要 */}
         {post.excerpt && (
-          <div className="mb-8 rounded-lg border-l-4 border-primary bg-muted p-4">
+          <div className="mb-8 rounded-lg bg-gradient-to-r from-primary/10 to-transparent p-4 shadow-md">
             <p className="text-muted-foreground italic">{post.excerpt}</p>
           </div>
         )}
@@ -118,7 +118,7 @@ export default function BlogPostPage() {
         <div className="mt-12">
           <Link
             href="/blog"
-            className="rounded-lg border px-4 py-2 transition-colors hover:bg-accent"
+            className="rounded-lg bg-card px-4 py-2 shadow-sm transition-all hover:bg-accent hover:shadow-md"
           >
             ← 返回博客列表
           </Link>

@@ -41,13 +41,13 @@ export default function Home() {
         <div className="flex justify-center gap-4">
           <Link
             href="/blog"
-            className="rounded-lg bg-primary px-6 py-3 text-primary-foreground transition-colors hover:bg-primary/90"
+            className="rounded-lg bg-primary px-6 py-3 text-primary-foreground transition-all duration-200 hover:bg-primary/90 hover:shadow-lg"
           >
             浏览博客
           </Link>
           <Link
             href="/admin"
-            className="rounded-lg border px-6 py-3 transition-colors hover:bg-accent"
+            className="rounded-lg px-6 py-3 transition-all duration-200 hover:bg-accent hover:shadow-lg"
           >
             后台管理
           </Link>
@@ -71,7 +71,7 @@ export default function Home() {
             <p className="text-muted-foreground">加载中...</p>
           </div>
         ) : latestPosts.length === 0 ? (
-          <div className="rounded-lg border bg-card p-8 text-center">
+          <div className="rounded-lg bg-card p-8 text-center shadow-md">
             <p className="text-muted-foreground">暂无文章</p>
             <p className="mt-2 text-sm">
               访问 <a href="/admin/posts" className="text-primary hover:underline">后台管理</a> 创建新文章
@@ -90,21 +90,21 @@ export default function Home() {
       <section className="mx-auto mt-16 max-w-6xl">
         <h2 className="mb-8 text-2xl font-bold text-center">功能特性</h2>
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-lg border bg-card p-6 text-center">
+          <div className="rounded-lg bg-card p-6 text-center shadow-md transition-shadow hover:shadow-lg">
             <div className="mb-4 text-4xl">✍️</div>
             <h3 className="mb-2 text-lg font-semibold">文章管理</h3>
             <p className="text-sm text-muted-foreground">
               支持创建、编辑、删除文章，数据持久化存储
             </p>
           </div>
-          <div className="rounded-lg border bg-card p-6 text-center">
+          <div className="rounded-lg bg-card p-6 text-center shadow-md transition-shadow hover:shadow-lg">
             <div className="mb-4 text-4xl">🏷️</div>
             <h3 className="mb-2 text-lg font-semibold">分类标签</h3>
             <p className="text-sm text-muted-foreground">
               支持文章分类和标签管理，便于内容组织
             </p>
           </div>
-          <div className="rounded-lg border bg-card p-6 text-center">
+          <div className="rounded-lg bg-card p-6 text-center shadow-md transition-shadow hover:shadow-lg">
             <div className="mb-4 text-4xl">🎨</div>
             <h3 className="mb-2 text-lg font-semibold">主题切换</h3>
             <p className="text-sm text-muted-foreground">

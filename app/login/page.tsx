@@ -62,7 +62,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="rounded-lg bg-destructive/10 p-4 text-sm text-destructive">
+            <div className="rounded-lg bg-destructive/10 p-4 text-sm text-destructive shadow-md">
               {error}
             </div>
           )}
@@ -77,7 +77,7 @@ export default function LoginPage() {
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
               }
-              className="w-full rounded-lg border bg-background px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg bg-background px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow hover:shadow-md"
               placeholder="请输入用户名或邮箱"
               required
             />
@@ -93,7 +93,7 @@ export default function LoginPage() {
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
-              className="w-full rounded-lg border bg-background px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg bg-background px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow hover:shadow-md"
               placeholder="请输入密码"
               required
             />
@@ -102,7 +102,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+            className="w-full rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-all duration-200 hover:bg-primary/90 hover:shadow-lg disabled:opacity-50"
           >
             {isLoading ? '登录中...' : '登录'}
           </button>

@@ -89,13 +89,13 @@ export default function PostsManagementPage() {
       )}
 
       {posts.length === 0 ? (
-        <div className="rounded-lg border bg-card p-8 text-center">
+        <div className="rounded-lg bg-card p-8 text-center shadow-md">
           <p className="text-muted-foreground">暂无文章，点击上方按钮创建新文章</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border">
+        <div className="overflow-hidden rounded-lg shadow-lg">
           <table className="w-full">
-            <thead className="bg-muted">
+            <thead className="bg-muted shadow-sm">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium">标题</th>
                 <th className="px-4 py-3 text-left text-sm font-medium">分类</th>
@@ -103,9 +103,9 @@ export default function PostsManagementPage() {
                 <th className="px-4 py-3 text-left text-sm font-medium">操作</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody>
               {posts.map((post: Post) => (
-                <tr key={post.id} className="bg-card">
+                <tr key={post.id} className="bg-card transition-colors hover:bg-accent/50">
                   <td className="px-4 py-3">
                     <div>
                       <div className="font-medium">{post.title}</div>
@@ -113,7 +113,7 @@ export default function PostsManagementPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="rounded-full bg-secondary px-2 py-1 text-xs">
+                    <span className="rounded-full bg-secondary px-2 py-1 text-xs shadow-sm">
                       {post.category.name}
                     </span>
                   </td>
@@ -124,13 +124,13 @@ export default function PostsManagementPage() {
                     <div className="flex gap-2">
                       <Link
                         href={`/admin/posts/edit/${post.id}`}
-                        className="rounded px-3 py-1 text-sm transition-colors hover:bg-accent"
+                        className="rounded px-3 py-1 text-sm transition-all hover:bg-accent hover:shadow-md"
                       >
                         编辑
                       </Link>
                       <button
                         onClick={() => handleDelete(post.id)}
-                        className="rounded px-3 py-1 text-sm text-destructive transition-colors hover:bg-destructive/10"
+                        className="rounded px-3 py-1 text-sm text-destructive transition-all hover:bg-destructive/10 hover:shadow-md"
                       >
                         删除
                       </button>

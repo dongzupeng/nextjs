@@ -8,7 +8,7 @@ interface PostListItemProps {
 
 export default function PostListItem({ post }: PostListItemProps) {
   return (
-    <article className="border-b py-6 last:border-0">
+    <article className="rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-[1.01]">
       <Link href={`/blog/${post.slug}`} className="group">
         <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
           <span>{formatDate(post.publishedAt)}</span>
