@@ -79,6 +79,29 @@ export default function EditPostPage() {
     }
   };
 
+  // 处理标签选择
+  const handleTagChange = (tagId: number) => {
+    if (formData.selectedTags.includes(tagId)) {
+      // 取消选择
+      setFormData(prev => ({
+        ...prev,
+        selectedTags: prev.selectedTags.filter(id => id !== tagId),
+      }));
+    } else {
+      // 最多选择3个标签
+      if (formData.selectedTags.length < 3) {
+        setFormData(prev => ({
+          ...prev,
+          selectedTags: [...prev.selectedTags, tagId],
+        }));
+      } else {
+        setError('最多只能选择3个标签');
+        // 3秒后清除错误提示
+        setTimeout(() => setError(''), 3000);
+      }
+    }
+  };
+
   // 处理表单提交
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,16 +141,6 @@ export default function EditPostPage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // 处理标签选择
-  const handleTagChange = (tagId: number) => {
-    setFormData(prev => ({
-      ...prev,
-      selectedTags: prev.selectedTags.includes(tagId)
-        ? prev.selectedTags.filter(id => id !== tagId)
-        : [...prev.selectedTags, tagId],
-    }));
   };
 
   if (isLoading) {
@@ -207,7 +220,7 @@ export default function EditPostPage() {
         {/* 标签 */}
         <div>
           <label className="mb-2 block text-sm font-medium">
-            文章标签 <span className="text-destructive">*</span>
+            文章标签 <span className="text-destructive">*</span> (最多选择3个)
           </label>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
@@ -225,11 +238,15 @@ export default function EditPostPage() {
                   checked={formData.selectedTags.includes(tag.id)}
                   onChange={() => handleTagChange(tag.id)}
                   className="sr-only"
+                  disabled={!formData.selectedTags.includes(tag.id) && formData.selectedTags.length >= 3}
                 />
                 {tag.name}
               </label>
             ))}
           </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            已选择 {formData.selectedTags.length}/3 个标签
+          </p>
         </div>
 
         {/* 内容 */}
