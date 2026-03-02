@@ -55,17 +55,52 @@ export async function GET(
       );
     }
 
-    // 增加浏览量
+    // 增加浏览量 - 防止重复增加
     const postId = post.id;
-    await prisma.post.update({
+    
+    // 使用一个Set来存储正在处理的文章ID，防止并发请求
+    if (!(global as any).processingPosts) {
+      (global as any).processingPosts = new Set();
+    }
+    
+    // 检查是否正在处理该文章
+    if (!(global as any).processingPosts.has(postId)) {
+      try {
+        // 标记为正在处理
+        (global as any).processingPosts.add(postId);
+        
+        console.log(`Incrementing views for post ${postId}, current views: ${post.views}`);
+        await prisma.post.update({
+          where: { id: postId },
+          data: { views: { increment: 1 } },
+        });
+      } finally {
+        // 处理完成后移除标记
+        setTimeout(() => {
+          (global as any).processingPosts.delete(postId);
+        }, 1000); // 1秒后移除标记
+      }
+    } else {
+      console.log(`Skipping view increment for post ${postId} - already being processed`);
+    }
+
+    // 重新获取更新后的文章数据
+    const updatedPost = await prisma.post.findUnique({
       where: { id: postId },
-      data: { views: { increment: 1 } },
+      include: {
+        author: {
+          select: { id: true, username: true },
+        },
+        category: true,
+        tags: {
+          include: { tag: true },
+        },
+      },
     });
 
     return NextResponse.json({
-      ...post,
-      tags: post.tags.map(pt => pt.tag),
-      views: post.views + 1,
+      ...updatedPost!,
+      tags: updatedPost!.tags.map(pt => pt.tag),
     });
   } catch (error) {
     console.error('获取文章错误:', error);
