@@ -9,7 +9,7 @@ interface PostListItemProps {
 export default function PostListItem({ post }: PostListItemProps) {
   return (
     <article className="rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-[1.01]">
-      <Link href={`/blog/${post.slug}`} className="group">
+      <Link href={`/blog/${post.slug}`} className="group flex flex-col h-full">
         <div className="mb-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span className="font-medium text-primary">{post.author.username}</span>
           <span>•</span>
@@ -22,9 +22,20 @@ export default function PostListItem({ post }: PostListItemProps) {
         <h3 className="mb-2 text-xl font-semibold group-hover:text-primary">
           {post.title}
         </h3>
-        <p className="text-muted-foreground line-clamp-2">
+        <p className="mb-4 text-muted-foreground line-clamp-2">
           {post.excerpt}
         </p>
+        {/* 标签在底部 */}
+        <div className="mt-auto flex flex-wrap gap-2">
+          {post.tags.map((tag) => (
+            <span
+              key={tag.id}
+              className="rounded-full bg-secondary px-3 py-1 text-xs text-secondary-foreground shadow-sm"
+            >
+              {tag.name}
+            </span>
+          ))}
+        </div>
       </Link>
     </article>
   );

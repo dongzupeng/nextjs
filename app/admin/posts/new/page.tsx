@@ -70,7 +70,7 @@ export default function NewPostPage() {
     e.preventDefault();
     setError('');
     
-    if (!formData.title || !formData.content || !formData.categoryId || !userId) {
+    if (!formData.title || !formData.content || !formData.categoryId || formData.selectedTags.length === 0 || !userId) {
       setError('请填写必填字段');
       return;
     }
@@ -185,7 +185,9 @@ export default function NewPostPage() {
 
         {/* 标签 */}
         <div>
-          <label className="mb-2 block text-sm font-medium">文章标签</label>
+          <label className="mb-2 block text-sm font-medium">
+            文章标签 <span className="text-destructive">*</span>
+          </label>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <label
