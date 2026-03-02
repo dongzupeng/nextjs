@@ -13,11 +13,10 @@ export async function GET(
   try {
     const { id } = await params;
     
-    // 判断是 ID 还是 slug
-    const isNumeric = /^\d+$/.test(id);
-    
     let post;
-    if (isNumeric) {
+    
+    // 先尝试通过ID查询
+    if (/^\d+$/.test(id)) {
       const postId = parseInt(id);
       post = await prisma.post.findUnique({
         where: { id: postId },
@@ -31,9 +30,11 @@ export async function GET(
           },
         },
       });
-    } else {
-      // 通过 slug 查询
-      post = await prisma.post.findUnique({
+    }
+    
+    // 如果通过ID没找到，尝试通过slug查询
+    if (!post) {
+      post = await prisma.post.findFirst({
         where: { slug: id },
         include: {
           author: {
@@ -118,22 +119,24 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { title, slug, excerpt, content, coverImage, categoryId, tagIds } = body;
-
-    // 计算阅读时间
-    const readingTime = content ? Math.ceil(content.length / 500) : existingPost.readingTime;
+    const { title, excerpt, content, categoryId, tagIds } = body;
 
     // 更新文章
-    const post = await prisma.post.update({
+    const updatedPost = await prisma.post.update({
       where: { id: postId },
       data: {
-        title: title || existingPost.title,
-        slug: slug || existingPost.slug,
-        excerpt: excerpt !== undefined ? excerpt : existingPost.excerpt,
-        content: content || existingPost.content,
-        coverImage: coverImage !== undefined ? coverImage : existingPost.coverImage,
-        readingTime,
-        categoryId: categoryId || existingPost.categoryId,
+        title,
+        excerpt,
+        content,
+        categoryId: parseInt(categoryId),
+        // 先删除所有标签关联
+        tags: {
+          deleteMany: {},
+          // 再创建新的标签关联
+          create: tagIds?.map((tagId: number) => ({
+            tag: { connect: { id: tagId } },
+          })),
+        },
       },
       include: {
         author: {
@@ -146,48 +149,9 @@ export async function PUT(
       },
     });
 
-    // 更新标签
-    if (tagIds) {
-      // 删除旧标签关联
-      await prisma.postTag.deleteMany({
-        where: { postId },
-      });
-
-      // 创建新标签关联
-      if (tagIds.length > 0) {
-        await prisma.postTag.createMany({
-          data: tagIds.map((tagId: number) => ({
-            postId,
-            tagId,
-          })),
-        });
-      }
-
-      // 重新获取文章以包含更新后的标签
-      const updatedPost = await prisma.post.findUnique({
-        where: { id: postId },
-        include: {
-          author: {
-            select: { id: true, username: true },
-          },
-          category: true,
-          tags: {
-            include: { tag: true },
-          },
-        },
-      });
-
-      if (updatedPost) {
-        return NextResponse.json({
-          ...updatedPost,
-          tags: updatedPost.tags.map(pt => pt.tag),
-        });
-      }
-    }
-
     return NextResponse.json({
-      ...post,
-      tags: post.tags.map(pt => pt.tag),
+      ...updatedPost,
+      tags: updatedPost.tags.map(pt => pt.tag),
     });
   } catch (error) {
     console.error('更新文章错误:', error);
@@ -240,7 +204,7 @@ export async function DELETE(
       );
     }
 
-    // 删除文章（关联的标签会自动级联删除）
+    // 删除文章（关联的标签会自动删除）
     await prisma.post.delete({
       where: { id: postId },
     });
