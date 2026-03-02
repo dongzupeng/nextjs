@@ -10,7 +10,9 @@ export default function PostCard({ post }: PostCardProps) {
   return (
     <article className="group rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-[1.02]">
       <Link href={`/blog/${post.slug}`}>
-        <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span className="font-medium text-primary">{post.author.username}</span>
+          <span>•</span>
           <span>{post.category.name}</span>
           <span>•</span>
           <span>{formatDate(post.publishedAt)}</span>
