@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import MarkdownRenderer from '@/components/blog/MarkdownRenderer';
 
 export default function NewPostPage() {
   const router = useRouter();
@@ -87,7 +88,7 @@ export default function NewPostPage() {
           excerpt: formData.excerpt,
           content: formData.content,
           categoryId: parseInt(formData.categoryId),
-          tags: formData.selectedTags,
+          tagIds: formData.selectedTags,
           userId,
         }),
       });
@@ -227,9 +228,7 @@ export default function NewPostPage() {
         {formData.content && (
           <div className="rounded-lg bg-card p-4 shadow-md">
             <h3 className="mb-2 text-sm font-medium text-muted-foreground">预览</h3>
-            <div className="prose prose-sm max-w-none">
-              <pre className="whitespace-pre-wrap text-sm">{formData.content.slice(0, 500)}...</pre>
-            </div>
+            <MarkdownRenderer content={formData.content} />
           </div>
         )}
 

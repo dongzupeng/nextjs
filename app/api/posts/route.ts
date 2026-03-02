@@ -86,15 +86,22 @@ export async function POST(request: NextRequest) {
     };
 
     const body = await request.json();
-    const { title, slug, excerpt, content, coverImage, categoryId, tagIds } = body;
+    const { title, slug: providedSlug, excerpt, content, coverImage, categoryId, tagIds } = body;
 
     // 验证输入
-    if (!title || !slug || !content) {
+    if (!title || !content) {
       return NextResponse.json(
-        { error: '标题、slug和内容不能为空' },
+        { error: '标题和内容不能为空' },
         { status: 400 }
       );
     }
+
+    // 自动生成 slug
+    const slug = providedSlug || title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .substring(0, 50);
 
     // 检查slug是否已存在
     const existingPost = await prisma.post.findUnique({

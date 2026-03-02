@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import MarkdownRenderer from '@/components/blog/MarkdownRenderer';
 import { Post } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
 
@@ -110,9 +111,7 @@ export default function BlogPostPage() {
         )}
 
         {/* 文章内容 */}
-        <div className="prose prose-lg max-w-none">
-          <div className="whitespace-pre-wrap">{post.content}</div>
-        </div>
+        <MarkdownRenderer content={post.content} />
 
         {/* 返回按钮 */}
         <div className="mt-12">
