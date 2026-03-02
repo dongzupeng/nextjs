@@ -10,13 +10,27 @@ import { Post } from '@/types/blog';
 
 export default function PostsManagementPage() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [currentUser, setCurrentUser] = useState<{ id: number; username: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // 加载文章列表
+  // 加载文章列表和用户信息
   useEffect(() => {
-    loadPosts();
+    Promise.all([loadPosts(), loadCurrentUser()])
+      .finally(() => setIsLoading(false));
   }, []);
+
+  const loadCurrentUser = async () => {
+    try {
+      const response = await fetch('/api/auth/me');
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data.user);
+      }
+    } catch (error) {
+      console.error('获取用户信息失败:', error);
+    }
+  };
 
   const loadPosts = async () => {
     try {
@@ -28,8 +42,6 @@ export default function PostsManagementPage() {
       setPosts(data.posts || []);
     } catch (err: any) {
       setError(err.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -42,7 +54,8 @@ export default function PostsManagementPage() {
         });
         
         if (!response.ok) {
-          throw new Error('删除文章失败');
+          const data = await response.json();
+          throw new Error(data.error || '删除文章失败');
         }
         
         loadPosts();
@@ -60,6 +73,11 @@ export default function PostsManagementPage() {
       month: '2-digit',
       day: '2-digit',
     });
+  };
+
+  // 检查是否为文章作者
+  const isAuthor = (post: Post) => {
+    return currentUser && post.authorId === currentUser.id;
   };
 
   if (isLoading) {
@@ -98,6 +116,7 @@ export default function PostsManagementPage() {
             <thead className="bg-muted shadow-sm">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium">标题</th>
+                <th className="px-4 py-3 text-left text-sm font-medium">作者</th>
                 <th className="px-4 py-3 text-left text-sm font-medium">分类</th>
                 <th className="px-4 py-3 text-left text-sm font-medium">发布时间</th>
                 <th className="px-4 py-3 text-left text-sm font-medium">操作</th>
@@ -113,6 +132,9 @@ export default function PostsManagementPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
+                    <span className="font-medium text-primary">{post.author.username}</span>
+                  </td>
+                  <td className="px-4 py-3">
                     <span className="rounded-full bg-secondary px-2 py-1 text-xs shadow-sm">
                       {post.category.name}
                     </span>
@@ -122,18 +144,25 @@ export default function PostsManagementPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
-                      <Link
-                        href={`/admin/posts/edit/${post.id}`}
-                        className="rounded px-3 py-1 text-sm transition-all hover:bg-accent hover:shadow-md"
-                      >
-                        编辑
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(post.id)}
-                        className="rounded px-3 py-1 text-sm text-destructive transition-all hover:bg-destructive/10 hover:shadow-md"
-                      >
-                        删除
-                      </button>
+                      {isAuthor(post) && (
+                        <Link
+                          href={`/admin/posts/edit/${post.id}`}
+                          className="rounded px-3 py-1 text-sm transition-all hover:bg-accent hover:shadow-md"
+                        >
+                          编辑
+                        </Link>
+                      )}
+                      {isAuthor(post) && (
+                        <button
+                          onClick={() => handleDelete(post.id)}
+                          className="rounded px-3 py-1 text-sm text-destructive transition-all hover:bg-destructive/10 hover:shadow-md"
+                        >
+                          删除
+                        </button>
+                      )}
+                      {!isAuthor(post) && (
+                        <span className="text-sm text-muted-foreground">无权限</span>
+                      )}
                     </div>
                   </td>
                 </tr>
