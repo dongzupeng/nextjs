@@ -118,9 +118,11 @@ export default function Header() {
               <Link href="/tag" className="text-sm font-medium transition-colors hover:text-primary">
                 标签
               </Link>
-              <Link href="/about" className="text-sm font-medium transition-colors hover:text-primary">
-                关于
-              </Link>
+              {isLoggedIn && (
+                <Link href="/about" className="text-sm font-medium transition-colors hover:text-primary">
+                  关于
+                </Link>
+              )}
               {isLoggedIn && (
                 <Link 
                   href="/admin" 

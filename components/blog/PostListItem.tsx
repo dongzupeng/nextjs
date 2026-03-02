@@ -8,7 +8,7 @@ interface PostListItemProps {
 
 export default function PostListItem({ post }: PostListItemProps) {
   return (
-    <article className="rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-[1.01]">
+    <article className="mb-8 rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-[1.01]">
       <Link href={`/blog/${post.slug}`} className="group flex flex-col h-full">
         <div className="mb-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span className="font-medium text-primary">{post.author.username}</span>
