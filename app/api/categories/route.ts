@@ -76,3 +76,113 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// 更新分类
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, name, slug, description } = body;
+
+    // 验证输入
+    if (!id || !name || !slug) {
+      return NextResponse.json(
+        { error: '分类ID、名称和slug不能为空' },
+        { status: 400 }
+      );
+    }
+
+    // 检查分类是否存在
+    const existingCategory = await prisma.category.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!existingCategory) {
+      return NextResponse.json(
+        { error: '分类不存在' },
+        { status: 404 }
+      );
+    }
+
+    // 检查slug是否已被其他分类使用
+    const existingSlug = await prisma.category.findFirst({
+      where: { slug, id: { not: parseInt(id) } },
+    });
+
+    if (existingSlug) {
+      return NextResponse.json(
+        { error: '分类slug已存在' },
+        { status: 400 }
+      );
+    }
+
+    // 更新分类
+    const updatedCategory = await prisma.category.update({
+      where: { id: parseInt(id) },
+      data: {
+        name,
+        slug,
+        description,
+      },
+    });
+
+    return NextResponse.json(updatedCategory);
+  } catch (error) {
+    console.error('更新分类错误:', error);
+    return NextResponse.json(
+      { error: '更新分类失败' },
+      { status: 500 }
+    );
+  }
+}
+
+// 删除分类
+export async function DELETE(request: NextRequest) {
+  try {
+    const { id } = await request.json();
+
+    // 验证输入
+    if (!id) {
+      return NextResponse.json(
+        { error: '分类ID不能为空' },
+        { status: 400 }
+      );
+    }
+
+    // 检查分类是否存在
+    const existingCategory = await prisma.category.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!existingCategory) {
+      return NextResponse.json(
+        { error: '分类不存在' },
+        { status: 404 }
+      );
+    }
+
+    // 检查分类是否有文章
+    const postCount = await prisma.post.count({
+      where: { categoryId: parseInt(id) },
+    });
+
+    if (postCount > 0) {
+      return NextResponse.json(
+        { error: '该分类下有文章，无法删除' },
+        { status: 400 }
+      );
+    }
+
+    // 删除分类
+    await prisma.category.delete({
+      where: { id: parseInt(id) },
+    });
+
+    return NextResponse.json({ message: '删除分类成功' });
+  } catch (error) {
+    console.error('删除分类错误:', error);
+    return NextResponse.json(
+      { error: '删除分类失败' },
+      { status: 500 }
+    );
+  }
+}
