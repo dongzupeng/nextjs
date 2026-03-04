@@ -75,3 +75,118 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// 更新标签
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, name, slug } = body;
+
+    // 验证输入
+    if (!id || !name || !slug) {
+      return NextResponse.json(
+        { error: '标签ID、名称和slug不能为空' },
+        { status: 400 }
+      );
+    }
+
+    // 检查标签是否存在
+    const existingTag = await prisma.tag.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!existingTag) {
+      return NextResponse.json(
+        { error: '标签不存在' },
+        { status: 404 }
+      );
+    }
+
+    // 检查slug是否已被其他标签使用
+    const existingSlug = await prisma.tag.findFirst({
+      where: { slug, id: { not: parseInt(id) } },
+    });
+
+    if (existingSlug) {
+      return NextResponse.json(
+        { error: '标签slug已存在' },
+        { status: 400 }
+      );
+    }
+
+    // 更新标签
+    const updatedTag = await prisma.tag.update({
+      where: { id: parseInt(id) },
+      data: {
+        name,
+        slug,
+      },
+    });
+
+    return NextResponse.json(updatedTag);
+  } catch (error) {
+    console.error('更新标签错误:', error);
+    return NextResponse.json(
+      { error: '更新标签失败' },
+      { status: 500 }
+    );
+  }
+}
+
+// 删除标签
+export async function DELETE(request: NextRequest) {
+  try {
+    const { id } = await request.json();
+
+    // 验证输入
+    if (!id) {
+      return NextResponse.json(
+        { error: '标签ID不能为空' },
+        { status: 400 }
+      );
+    }
+
+    // 检查标签是否存在
+    const existingTag = await prisma.tag.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!existingTag) {
+      return NextResponse.json(
+        { error: '标签不存在' },
+        { status: 404 }
+      );
+    }
+
+    // 检查标签是否有文章
+    const postCount = await prisma.post.count({
+      where: {
+        tags: {
+          some: {
+            tagId: parseInt(id),
+          },
+        },
+      },
+    });
+
+    if (postCount > 0) {
+      return NextResponse.json(
+        { error: '该标签下有文章，无法删除' },
+        { status: 400 }
+      );
+    }
+
+    // 删除标签
+    await prisma.tag.delete({
+      where: { id: parseInt(id) },
+    });
+
+    return NextResponse.json({ message: '删除标签成功' });
+  } catch (error) {
+    console.error('删除标签错误:', error);
+    return NextResponse.json(
+      { error: '删除标签失败' },
+      { status: 500 }
+    );
+  }
+}

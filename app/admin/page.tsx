@@ -32,12 +32,15 @@ export default function AdminPage() {
         </Link>
         
         {/* 标签管理卡片 */}
-        <div className="rounded-lg bg-card p-6 shadow-md">
+        <Link 
+          href="/admin/tags"
+          className="rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-105"
+        >
           <h2 className="mb-2 text-xl font-semibold">标签管理</h2>
           <p className="text-muted-foreground">
-            管理文章标签（开发中）
+            创建、编辑和管理文章标签
           </p>
-        </div>
+        </Link>
       </div>
     </div>
   );
