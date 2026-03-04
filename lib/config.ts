@@ -21,16 +21,15 @@ export interface SiteConfig {
  * 站点配置实例
  */
 export const siteConfig: SiteConfig = {
-  name: 'My Blog',
-  description: 'A personal blog built with Next.js',
+  name: 'FishpondBlog',
+  description: '鱼塘博客 - 大家可以在这里随机发表个人内容',
   url: 'https://yourdomain.com',
   ogImage: '/og-image.png',
   links: {
-    github: 'https://github.com/yourusername',
-    twitter: 'https://twitter.com/yourusername',
+    github: 'https://github.com/dongzupeng',
   },
   author: {
-    name: 'Your Name',
-    email: 'your.email@example.com',
+    name: '董祖鹏',
+    email: 'dongzupeng@126.com',
   },
 };

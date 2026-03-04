@@ -28,6 +28,19 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  icons: {
+    icon: {
+      url: '/logo.png',
+      sizes: '32x32',
+      type: 'image/png',
+    },
+    apple: {
+      url: '/logo.png',
+      sizes: '180x180',
+      type: 'image/png',
+    },
+    shortcut: '/logo.png',
+  },
 };
 
 /**
@@ -41,6 +54,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <link rel="icon" href="/logo.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/logo.png" sizes="180x180" type="image/png" />
+        <link rel="shortcut icon" href="/logo.png" type="image/png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
