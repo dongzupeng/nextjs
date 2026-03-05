@@ -1,5 +1,5 @@
 /**
- * 认证中间件
+ * 认证代理
  * 保护需要登录的页面
  */
 import { NextResponse } from 'next/server';
@@ -52,26 +52,26 @@ async function verifyToken(token: string): Promise<boolean> {
   }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 获取token
   const token = request.cookies.get('auth_token')?.value;
   const isValidToken = token ? await verifyToken(token) : false;
 
-  console.log(`[Middleware] Path: ${pathname}, HasToken: ${!!token}, Valid: ${isValidToken}`);
+  console.log(`[Proxy] Path: ${pathname}, HasToken: ${!!token}, Valid: ${isValidToken}`);
 
   // 只保护 /admin 路径
   if (pathname.startsWith('/admin')) {
     if (!isValidToken) {
       // 未登录或token无效，重定向到登录页
-      console.log(`[Middleware] 未登录，重定向到登录页`);
+      console.log(`[Proxy] 未登录，重定向到登录页`);
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
     // token有效，允许访问
-    console.log(`[Middleware] 允许访问 /admin`);
+    console.log(`[Proxy] 允许访问 /admin`);
     return NextResponse.next();
   }
 
