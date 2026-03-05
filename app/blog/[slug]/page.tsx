@@ -66,6 +66,16 @@ export default function BlogPostPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <article className="mx-auto max-w-3xl">
+        {/* 封面图片 */}
+        {post.coverImage && (
+          <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
+            <img 
+              src={post.coverImage} 
+              alt={post.title} 
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        )}
         {/* 文章标题 */}
         <h1 className="mb-4 text-4xl font-bold">{post.title}</h1>
         

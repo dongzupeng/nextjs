@@ -154,7 +154,15 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { title, excerpt, content, categoryId, tagIds } = body;
+    const { title, excerpt, content, coverImage, categoryId, tagIds } = body;
+
+    // 验证输入
+    if (!title || !content || !coverImage) {
+      return NextResponse.json(
+        { error: '标题、内容和封面图片不能为空' },
+        { status: 400 }
+      );
+    }
 
     // 更新文章
     const updatedPost = await prisma.post.update({
@@ -163,6 +171,7 @@ export async function PUT(
         title,
         excerpt,
         content,
+        coverImage,
         categoryId: parseInt(categoryId),
         // 先删除所有标签关联
         tags: {

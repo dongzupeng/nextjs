@@ -10,6 +10,16 @@ export default function PostCard({ post }: PostCardProps) {
   return (
     <article className="group rounded-lg bg-card p-6 shadow-md transition-all hover:shadow-lg hover:scale-[1.02]">
       <Link href={`/blog/${post.slug}`} className="flex flex-col h-full">
+        {/* 封面图片 */}
+        {post.coverImage && (
+          <div className="mb-4 rounded-lg overflow-hidden shadow-md aspect-video">
+            <img 
+              src={post.coverImage} 
+              alt={post.title} 
+              className="w-full h-full object-cover transition-transform group-hover:scale-105"
+            />
+          </div>
+        )}
         <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span className="font-medium text-primary">{post.author.username}</span>
           <span>•</span>

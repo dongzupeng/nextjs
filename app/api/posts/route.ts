@@ -89,9 +89,9 @@ export async function POST(request: NextRequest) {
     const { title, slug: providedSlug, excerpt, content, coverImage, categoryId, tagIds } = body;
 
     // 验证输入
-    if (!title || !content) {
+    if (!title || !content || !coverImage) {
       return NextResponse.json(
-        { error: '标题和内容不能为空' },
+        { error: '标题、内容和封面图片不能为空' },
         { status: 400 }
       );
     }

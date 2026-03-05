@@ -22,9 +22,17 @@ export default function NewPostPage() {
     title: '',
     excerpt: '',
     content: '',
+    coverImage: '',
     categoryId: '',
     selectedTags: [] as number[],
   });
+  
+  // 封面图片预览
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
+  
+  // 上传状态
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   // 初始化数据
   useEffect(() => {
@@ -65,6 +73,38 @@ export default function NewPostPage() {
     }
   };
 
+  // 处理文件上传
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setUploadError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || '上传失败');
+      }
+
+      setFormData(prev => ({ ...prev, coverImage: data.url }));
+      setCoverImagePreview(data.url);
+    } catch (err: any) {
+      setUploadError(err.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   // 处理标签选择
   const handleTagChange = (tagId: number) => {
     if (formData.selectedTags.includes(tagId)) {
@@ -93,7 +133,7 @@ export default function NewPostPage() {
     e.preventDefault();
     setError('');
     
-    if (!formData.title || !formData.content || !formData.categoryId || formData.selectedTags.length === 0 || !userId) {
+    if (!formData.title || !formData.content || !formData.categoryId || formData.selectedTags.length === 0 || !formData.coverImage || !userId) {
       setError('请填写必填字段');
       return;
     }
@@ -110,6 +150,7 @@ export default function NewPostPage() {
           title: formData.title,
           excerpt: formData.excerpt,
           content: formData.content,
+          coverImage: formData.coverImage,
           categoryId: parseInt(formData.categoryId),
           tagIds: formData.selectedTags,
           userId,
@@ -162,6 +203,47 @@ export default function NewPostPage() {
             placeholder="请输入文章标题"
             required
           />
+        </div>
+
+        {/* 封面图片 */}
+        <div>
+          <label className="mb-2 block text-sm font-medium">
+            封面图片 <span className="text-destructive">*</span>
+          </label>
+          <div className="space-y-2">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              disabled={isUploading}
+              className="w-full rounded-lg bg-background px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow hover:shadow-md"
+            />
+            {isUploading && (
+              <div className="text-sm text-muted-foreground">上传中...</div>
+            )}
+            {uploadError && (
+              <div className="text-sm text-destructive">{uploadError}</div>
+            )}
+            {coverImagePreview && (
+              <div className="mt-2 rounded-lg overflow-hidden shadow-md w-64 h-36">
+                <img 
+                  src={coverImagePreview} 
+                  alt="封面预览" 
+                  className="w-full h-full object-cover transition-transform hover:scale-105"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData({ ...formData, coverImage: '' });
+                    setCoverImagePreview(null);
+                  }}
+                  className="mt-1 text-xs text-destructive hover:underline"
+                >
+                  移除封面
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 摘要 */}
