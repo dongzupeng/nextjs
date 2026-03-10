@@ -3,7 +3,7 @@
  */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { siteConfig } from '@/lib/config';
@@ -18,7 +18,10 @@ export default function Header() {
   const [theme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('system');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // 客户端初始化
   useEffect(() => {
@@ -38,6 +41,7 @@ export default function Header() {
         const data = await response.json();
         setIsLoggedIn(true);
         setUsername(data.user.username);
+        setUserAvatar(data.user.avatar || '');
       }
     } catch (error) {
       setIsLoggedIn(false);
@@ -136,18 +140,80 @@ export default function Header() {
             {/* 用户信息和主题切换 */}
             <div className="flex items-center gap-4">
               {isLoggedIn ? (
-                <>
-                  <span className="text-sm text-muted-foreground">
-                    {username}
-                  </span>
+                <div className="relative">
                   <button
-                    onClick={handleLogoutClick}
-                    className="rounded-lg bg-card px-3 py-1 text-sm font-medium shadow-sm transition-all duration-200 hover:bg-accent hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                    aria-label="登出"
+                    onMouseEnter={() => {
+                      if (menuTimeoutRef.current) {
+                        clearTimeout(menuTimeoutRef.current);
+                      }
+                      setShowUserMenu(true);
+                    }}
+                    onMouseLeave={() => {
+                      menuTimeoutRef.current = setTimeout(() => {
+                        setShowUserMenu(false);
+                      }, 200);
+                    }}
+                    className="flex items-center gap-2 rounded-full p-1 transition-all duration-200 hover:bg-accent hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    aria-label="用户菜单"
                   >
-                    登出
+                    <div className="h-8 w-8 rounded-full overflow-hidden shadow-md">
+                      {userAvatar ? (
+                        <img 
+                          src={userAvatar} 
+                          alt={username} 
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground">
+                          {username.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
                   </button>
-                </>
+                  
+                  {/* 用户下拉菜单 */}
+                  {showUserMenu && (
+                    <div 
+                      className="absolute right-0 mt-2 w-48 rounded-lg bg-card shadow-lg py-2 z-50"
+                      onMouseEnter={() => {
+                        if (menuTimeoutRef.current) {
+                          clearTimeout(menuTimeoutRef.current);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        menuTimeoutRef.current = setTimeout(() => {
+                          setShowUserMenu(false);
+                        }, 200);
+                      }}
+                    >
+                      <Link
+                        href="/settings"
+                        className="block px-4 py-2 text-sm transition-colors hover:bg-accent hover:text-primary"
+                      >
+                        设置
+                      </Link>
+                      <Link
+                        href="/settings/likes"
+                        className="block px-4 py-2 text-sm transition-colors hover:bg-accent hover:text-primary"
+                      >
+                        我的点赞
+                      </Link>
+                      <Link
+                        href="/settings/bookmarks"
+                        className="block px-4 py-2 text-sm transition-colors hover:bg-accent hover:text-primary"
+                      >
+                        我的收藏
+                      </Link>
+                      <div className="border-t border-border my-1"></div>
+                      <button
+                        onClick={handleLogoutClick}
+                        className="w-full text-left px-4 py-2 text-sm transition-colors hover:bg-accent hover:text-primary"
+                      >
+                        登出
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <Link
                   href="/login"
