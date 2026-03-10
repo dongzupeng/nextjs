@@ -35,6 +35,20 @@ export default function PostCard({ post }: PostCardProps) {
         <p className="mb-4 text-muted-foreground line-clamp-2">
           {post.excerpt}
         </p>
+        {/* 统计信息 */}
+        <div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1">
+            ❤️ {post.likeCount || 0}
+          </span>
+          <span className="flex items-center gap-1">
+            ⭐ {post.bookmarkCount || 0}
+          </span>
+          {post.views !== undefined && (
+            <span className="flex items-center gap-1">
+              👁️ {post.views}
+            </span>
+          )}
+        </div>
         {/* 标签在底部 */}
         <div className="mt-auto flex flex-wrap gap-2">
           {post.tags.map((tag) => (

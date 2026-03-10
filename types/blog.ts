@@ -18,6 +18,8 @@ export interface Post {
   views: number;           // 浏览量
   authorId: number;        // 作者ID
   categoryId: number;       // 分类ID
+  likeCount: number;        // 点赞数量
+  bookmarkCount: number;    // 收藏数量
 }
 
 /**

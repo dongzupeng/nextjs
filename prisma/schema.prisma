@@ -19,7 +19,9 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // 关联
-  posts Post[]
+  posts      Post[]
+  postLikes  PostLike[]
+  postBookmarks PostBookmark[]
 
   @@map("users")
 }
@@ -72,9 +74,11 @@ model Post {
   categoryId Int @map("category_id")
 
   // 关联
-  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  category Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  tags     PostTag[]
+  author      User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category    Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  tags        PostTag[]
+  likes       PostLike[]
+  bookmarks   PostBookmark[]
 
   @@index([slug])
   @@index([authorId])
@@ -93,4 +97,36 @@ model PostTag {
 
   @@id([postId, tagId])
   @@map("post_tags")
+}
+
+// 文章点赞模型
+model PostLike {
+  id        Int      @id @default(autoincrement())
+  postId    Int      @map("post_id")
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // 关联
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 唯一约束：一个用户对一篇文章只能点赞一次
+  @@unique([postId, userId])
+  @@map("post_likes")
+}
+
+// 文章收藏模型
+model PostBookmark {
+  id        Int      @id @default(autoincrement())
+  postId    Int      @map("post_id")
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // 关联
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 唯一约束：一个用户对一篇文章只能收藏一次
+  @@unique([postId, userId])
+  @@map("post_bookmarks")
 }

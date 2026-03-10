@@ -95,12 +95,16 @@ export async function GET(
         tags: {
           include: { tag: true },
         },
+        likes: true,
+        bookmarks: true,
       },
     });
 
     return NextResponse.json({
       ...updatedPost!,
       tags: updatedPost!.tags.map(pt => pt.tag),
+      likeCount: updatedPost!.likes.length,
+      bookmarkCount: updatedPost!.bookmarks.length,
     });
   } catch (error) {
     console.error('获取文章错误:', error);

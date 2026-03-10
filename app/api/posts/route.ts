@@ -37,6 +37,8 @@ export async function GET(request: NextRequest) {
           tags: {
             include: { tag: true },
           },
+          likes: true,
+          bookmarks: true,
         },
         orderBy: { publishedAt: 'desc' },
         skip,
@@ -49,6 +51,8 @@ export async function GET(request: NextRequest) {
     const formattedPosts = posts.map(post => ({
       ...post,
       tags: post.tags.map(pt => pt.tag),
+      likeCount: post.likes.length,
+      bookmarkCount: post.bookmarks.length,
     }));
 
     return NextResponse.json({
