@@ -12,18 +12,21 @@ export default function BlogPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const loadPosts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/posts');
+      const data = await response.json();
+      setPosts(data.posts || []);
+    } catch (err) {
+      console.error('加载文章失败:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // 加载文章列表
-    fetch('/api/posts')
-      .then(res => res.json())
-      .then(data => {
-        setPosts(data.posts || []);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error('加载文章失败:', err);
-        setIsLoading(false);
-      });
+    loadPosts();
   }, []);
 
   if (isLoading) {

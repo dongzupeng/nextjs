@@ -100,17 +100,12 @@ export async function GET(
       },
     });
 
-    const response = NextResponse.json({
+    return NextResponse.json({
       ...updatedPost!,
       tags: updatedPost!.tags.map(pt => pt.tag),
       likeCount: updatedPost!.likes.length,
       bookmarkCount: updatedPost!.bookmarks.length,
     });
-
-    // 设置缓存控制头 - 缓存1小时
-    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
-
-    return response;
   } catch (error) {
     console.error('获取文章错误:', error);
     return NextResponse.json(

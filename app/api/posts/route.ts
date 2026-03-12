@@ -25,6 +25,8 @@ export async function GET(request: NextRequest) {
       where.tags = { some: { tag: { slug: tag } } };
     }
 
+    // 直接查询文章，不使用缓存
+
     // 查询文章
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
@@ -65,8 +67,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // 设置缓存控制头 - 缓存1小时
-    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+    // 不设置缓存控制头，使用默认行为
 
     return response;
   } catch (error) {

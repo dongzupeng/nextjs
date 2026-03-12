@@ -14,18 +14,21 @@ export default function Home() {
   const [latestPosts, setLatestPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const loadLatestPosts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/posts?limit=3');
+      const data = await response.json();
+      setLatestPosts(data.posts || []);
+    } catch (err) {
+      console.error('加载文章失败:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // 加载最新文章
-    fetch('/api/posts?limit=3')
-      .then(res => res.json())
-      .then(data => {
-        setLatestPosts(data.posts || []);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error('加载文章失败:', err);
-        setIsLoading(false);
-      });
+    loadLatestPosts();
   }, []);
 
   return (
