@@ -53,10 +53,11 @@ async function getPostBySlug(slug: string) {
 
 // 生成动态元数据
 export async function generateMetadata(
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const resolvedParams = await params;
+  const post = await getPostBySlug(resolvedParams.slug);
   
   if (!post) {
     return {
