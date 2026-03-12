@@ -7,9 +7,12 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer';
+import StructuredData from '@/components/common/StructuredData';
 import { Post } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
+import { generateArticleStructuredData } from '@/lib/structured-data';
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -152,11 +155,14 @@ export default function BlogPostPage() {
       <article className="mx-auto max-w-3xl">
         {/* 封面图片 */}
         {post.coverImage && (
-          <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
-            <img 
+          <div className="mb-8 rounded-lg overflow-hidden shadow-lg relative aspect-video">
+            <Image 
               src={post.coverImage} 
               alt={post.title} 
-              className="w-full h-auto object-cover"
+              fill 
+              className="object-cover"
+              priority 
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         )}
@@ -238,6 +244,9 @@ export default function BlogPostPage() {
             ← 返回博客列表
           </Link>
         </div>
+        
+        {/* 结构化数据 */}
+        <StructuredData data={generateArticleStructuredData(post)} />
       </article>
     </div>
   );

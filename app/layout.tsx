@@ -6,7 +6,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import StructuredData from "@/components/common/StructuredData";
 import { siteConfig } from "@/lib/config";
+import { generateWebsiteStructuredData } from "@/lib/structured-data";
 
 // 加载 Geist 字体
 const geistSans = Geist({
@@ -28,6 +30,34 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  keywords: ["博客", "技术", "生活", "随笔", "Next.js", "Prisma"],
+  authors: [
+    {
+      name: siteConfig.author.name,
+      url: siteConfig.links.github,
+    },
+  ],
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    type: "website",
+    url: siteConfig.url,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+    siteName: siteConfig.name,
+  },
+  twitter: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    card: "summary_large_image",
+    images: [siteConfig.ogImage],
+  },
   icons: {
     icon: {
       url: '/logo.png',
@@ -41,6 +71,20 @@ export const metadata: Metadata = {
     },
     shortcut: '/logo.png',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  viewport: 'width=device-width, initial-scale=1',
+  category: 'Technology',
 };
 
 /**
@@ -58,6 +102,13 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" type="image/png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/logo.png" sizes="180x180" type="image/png" />
         <link rel="shortcut icon" href="/logo.png" type="image/png" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="application-name" content={siteConfig.name} />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content={siteConfig.name} />
+        <meta name="format-detection" content="telephone=no" />
+        <StructuredData data={generateWebsiteStructuredData()} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Post } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
 
@@ -12,11 +13,13 @@ export default function PostCard({ post }: PostCardProps) {
       <Link href={`/blog/${post.slug}`} className="flex flex-col h-full">
         {/* 封面图片 */}
         {post.coverImage && (
-          <div className="mb-4 rounded-lg overflow-hidden shadow-md aspect-video">
-            <img 
+          <div className="mb-4 rounded-lg overflow-hidden shadow-md aspect-video relative">
+            <Image 
               src={post.coverImage} 
               alt={post.title} 
-              className="w-full h-full object-cover transition-transform group-hover:scale-105"
+              fill 
+              className="object-cover transition-transform group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         )}
