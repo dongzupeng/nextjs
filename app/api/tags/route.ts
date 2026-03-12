@@ -22,7 +22,12 @@ export async function GET() {
       postCount: tag._count.posts,
     }));
 
-    return NextResponse.json({ tags: formattedTags });
+    const response = NextResponse.json({ tags: formattedTags });
+
+    // 设置缓存控制头 - 缓存1小时
+    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+
+    return response;
   } catch (error) {
     console.error('获取标签列表错误:', error);
     return NextResponse.json(

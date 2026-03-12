@@ -17,7 +17,12 @@ export async function GET() {
       take: 10,
     });
 
-    return NextResponse.json({ posts });
+    const response = NextResponse.json({ posts });
+
+    // 设置缓存控制头 - 缓存1小时
+    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+
+    return response;
   } catch (error) {
     console.error('查询失败:', error);
     return NextResponse.json(

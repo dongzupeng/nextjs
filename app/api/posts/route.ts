@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
       bookmarkCount: post.bookmarks.length,
     }));
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       posts: formattedPosts,
       pagination: {
         page,
@@ -64,6 +64,11 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
+
+    // 设置缓存控制头 - 缓存1小时
+    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+
+    return response;
   } catch (error) {
     console.error('获取文章列表错误:', error);
     return NextResponse.json(

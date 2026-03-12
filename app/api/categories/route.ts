@@ -22,7 +22,12 @@ export async function GET() {
       postCount: category._count.posts,
     }));
 
-    return NextResponse.json({ categories: formattedCategories });
+    const response = NextResponse.json({ categories: formattedCategories });
+
+    // 设置缓存控制头 - 缓存1小时
+    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+
+    return response;
   } catch (error) {
     console.error('获取分类列表错误:', error);
     return NextResponse.json(
